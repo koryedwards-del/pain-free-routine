@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Pain Free Posture Routine - TMJ & Neck Menu</title>
+
+    <meta name="theme-color" content="#0d9488">
+    <meta name="description" content="Egoscue Pain Free interactive posture alignment menu PWA">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PainFree E-Cises">
+    <meta name="application-name" content="PainFree">
+
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        tealBrand: {
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        html {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        header {
+            padding-top: max(0.75rem, env(safe-area-inset-top));
+        }
+        nav {
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes pulse-light {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        html[data-theme="light"] {
+            color-scheme: light;
+        }
+        html[data-theme="light"] body {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+        html[data-theme="light"] header,
+        html[data-theme="light"] nav {
+            background-color: rgba(255, 255, 255, 0.94) !important;
+            border-color: #e2e8f0 !important;
+        }
+        html[data-theme="light"] h1,
+        html[data-theme="light"] h2,
+        html[data-theme="light"] h3,
+        html[data-theme="light"] h4,
+        html[data-theme="light"] .text-white {
+            color: #0f172a !important;
+        }
+        html[data-theme="light"] .text-slate-300,
+        html[data-theme="light"] .text-slate-400 {
+            color: #475569 !important;
+        }
+        html[data-theme="light"] .bg-slate-800,
+        html[data-theme="light"] .bg-slate-900,
+        html[data-theme="light"] .bg-slate-700\/50 {
+            background-color: #ffffff !important;
+        }
+        html[data-theme="light"] .border-slate-700,
+        html[data-theme="light"] .border-slate-700\/50,
+        html[data-theme="light"] .border-slate-700\/60,
+        html[data-theme="light"] .border-slate-700\/70,
+        html[data-theme="light"] .border-slate-700\/80 {
+            border-color: #e2e8f0 !important;
+        }
+        html[data-theme="light"] #theme-toggle {
+            background-color: #e2e8f0 !important;
+            color: #334155 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans h-full min-h-screen flex flex-col justify-between antialiased selection:bg-teal-500 selection:text-white">
+    <header class="sticky top-0 z-30 bg-slate-800/90 backdrop-blur-md border-b border-slate-700/60 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white font-bold shadow-lg shadow-teal-600/30">
+                <i data-lucide="activity" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <h1 class="text-base font-bold leading-tight text-white">Pain Free Routine</h1>
+                <p class="text-xs text-teal-400 font-medium">TMJ & Neck/Head Menu</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button id="pwa-install-btn" class="hidden items-center space-x-1.5 bg-teal-600 hover:bg-teal-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition shadow-md">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Install</span>
+            </button>
+            <button id="theme-toggle" class="p-2 rounded-lg bg-slate-700/50 hover:bg-slate-700 text-slate-300 transition" aria-label="Toggle Theme">
+                <i data-lucide="moon" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </header>
+
+    <main id="app-container" class="flex-1 max-w-md w-full mx-auto p-4 pb-24 overflow-y-auto hide-scrollbar">
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-slate-800/95 backdrop-blur-md border-t border-slate-700/80 py-2 px-6">
+        <div class="max-w-md mx-auto flex justify-around items-center">
+            <button type="button" onclick="switchTab('routine')" id="nav-routine" class="nav-btn flex flex-col items-center space-y-1 text-teal-400 transition-colors">
+                <i data-lucide="list" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium tracking-wide">Menu List</span>
+            </button>
+            <button type="button" onclick="switchTab('guided')" id="nav-guided" class="nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200 transition-colors">
+                <div class="relative">
+                    <i data-lucide="play-circle" class="w-6 h-6"></i>
+                    <span id="active-workout-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-teal-400 rounded-full animate-ping"></span>
+                </div>
+                <span class="text-[10px] font-medium tracking-wide">Guided Mode</span>
+            </button>
+            <button type="button" onclick="switchTab('history')" id="nav-history" class="nav-btn flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200 transition-colors">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+                <span class="text-[10px] font-medium tracking-wide">History</span>
+            </button>
+        </div>
+    </nav>
+
+    <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-teal-600 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 text-sm font-medium transition-all duration-300 opacity-0 pointer-events-none transform -translate-y-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+        <span id="toast-message">Notification</span>
+    </div>
+
+    <script>
+        const EXERCISES = [
+            {
+                id: 'knee-pillow-squeezes',
+                title: 'Sitting Knee Pillow Squeezes',
+                pageRef: 'Pages 208, 210 (Figures 6-10)',
+                type: 'reps',
+                defaultSets: 3,
+                defaultReps: 20,
+                altReps: '3 sets of 20 (or 10 reps in menu sequence)',
+                purpose: 'Strengthens hip adductor/abductor muscles and realigns pelvis to reduce jaw/TMJ strain.',
+                instructions: 'Sit on the front edge of a chair with feet flat, hips and knees at 90 degrees. Place a pillow or foam block between your knees. Gently squeeze the pillow with your inner thighs, pause briefly, then release. Keep posture tall.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <path d="M60 110 L130 110 M90 110 L90 160 M120 110 L120 160" class="stroke-slate-600" stroke-width="2"/>
+                    <circle cx="100" cy="45" r="10" />
+                    <path d="M100 55 L95 105 L135 105 L135 155" />
+                    <path d="M135 155 L145 155" />
+                    <rect x="125" y="98" width="14" height="14" rx="3" class="fill-teal-500/30 stroke-teal-400" />
+                    <path d="M120 105 L125 105 M139 105 L144 105" class="stroke-teal-300" stroke-width="1.5" stroke-dasharray="2 2" />
+                </svg>`
+            },
+            {
+                id: 'sitting-heel-raises',
+                title: 'Sitting Heel Raises',
+                pageRef: 'Page 208 (Figure 6-6)',
+                type: 'reps',
+                defaultSets: 3,
+                defaultReps: 15,
+                altReps: '3 sets of 15 reps',
+                purpose: 'Engages the extensor muscles of the leg to restore proper kinetic alignment.',
+                instructions: 'Sit tall on a chair with knees bent 90° and feet flat on the floor. Keeping the balls of your feet pressed firm on the floor, raise both heels as high as possible, contract calves, then lower heels down.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <path d="M60 110 L125 110 M80 110 L80 160 M115 110 L115 160" class="stroke-slate-600" stroke-width="2"/>
+                    <circle cx="90" cy="45" r="10" />
+                    <path d="M90 55 L90 108 L130 108 L130 142 L138 152" />
+                    <path d="M130 142 L125 152 M125 152 L142 152" class="stroke-amber-400" />
+                    <path d="M136 138 L136 128 M133 131 L136 128 L139 131" class="stroke-teal-300" stroke-width="2"/>
+                </svg>`
+            },
+            {
+                id: 'gluteal-contractions',
+                title: 'Standing Gluteal Contractions',
+                pageRef: 'Page 208 (Figure 6-5)',
+                type: 'reps',
+                defaultSets: 3,
+                defaultReps: 15,
+                altReps: '3 sets of 15 reps',
+                purpose: 'Reminds gluteal muscles of their function in flexing and stabilizing the leg and pelvis.',
+                instructions: 'Stand upright with feet pointed straight ahead, hip-width apart. Squeeze your buttock muscles tightly together, hold for 1 second, and release completely. Maintain upright alignment without arching lower back.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <circle cx="100" cy="35" r="10" />
+                    <path d="M100 45 L100 95" />
+                    <path d="M100 95 L92 155 M100 95 L108 155" />
+                    <path d="M85 155 L95 155 M105 155 L115 155" />
+                    <path d="M85 60 L115 60" />
+                    <path d="M90 95 C95 102, 105 102, 110 95" class="stroke-amber-400 fill-amber-400/20" />
+                    <path d="M84 92 L92 95 M116 92 L108 95" class="stroke-teal-300" stroke-width="2"/>
+                </svg>`
+            },
+            {
+                id: 'static-extension',
+                title: 'Static Extension',
+                pageRef: 'Page 209 (Figure 4-7)',
+                type: 'time',
+                defaultTime: 120,
+                timeDisplay: '1 - 2 minutes',
+                purpose: 'Unlocks the shoulder yokes, spine, and neck position.',
+                instructions: 'Start on hands and knees. Walk hands forward about 6 inches, then shift shoulders forward directly over wrists. Keep elbows locked straight. Let shoulder blades collapse together, arch lower back slightly, and relax head completely toward floor.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <circle cx="50" cy="115" r="9" />
+                    <path d="M70 100 L70 150 M75 100 L75 150" />
+                    <path d="M70 100 Q105 115 140 100" />
+                    <path d="M140 100 L140 145 M140 145 L165 145" />
+                    <path d="M30 150 L175 150" class="stroke-slate-600" stroke-width="1.5"/>
+                </svg>`
+            },
+            {
+                id: 'wall-towels',
+                title: 'Wall Towels',
+                pageRef: 'Page 209 (Figure 11-3)',
+                type: 'time',
+                defaultTime: 180,
+                timeDisplay: '3 minutes',
+                purpose: 'Provides vertical postural alignment support that is otherwise lacking.',
+                instructions: 'Stand upright with your back against a smooth wall, feet shoulder-width apart and toes pointing straight ahead. Place a rolled 3-inch towel behind your neck and another behind the small of your lumbar spine. Relax arms at sides.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <path d="M125 20 L125 165" class="stroke-slate-500" stroke-width="4"/>
+                    <circle cx="110" cy="40" r="10" />
+                    <path d="M110 50 L110 110 L110 160" />
+                    <path d="M110 160 L100 160" />
+                    <path d="M110 70 L102 110" />
+                    <circle cx="120" cy="48" r="5" class="fill-amber-400/50 stroke-amber-400"/>
+                    <circle cx="120" cy="92" r="5" class="fill-amber-400/50 stroke-amber-400"/>
+                </svg>`
+            },
+            {
+                id: 'scapular-contractions',
+                title: 'Sitting Scapular Contractions',
+                pageRef: 'Page 210 (Figure 9-3)',
+                type: 'reps',
+                defaultSets: 3,
+                defaultReps: 10,
+                altReps: 'Repeat 10 times (or 3 sets of 10)',
+                purpose: 'Liberates the shoulder blades and reawakens upper back muscular function.',
+                instructions: 'Sit tall on a chair. Squeeze your shoulder blades straight back and down toward each other without shrugging shoulders up. Hold for 1 second, then release gently.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <path d="M65 110 L125 110 M80 110 L80 160" class="stroke-slate-600" stroke-width="2"/>
+                    <circle cx="95" cy="42" r="10" />
+                    <path d="M95 52 L95 110 L130 110 L130 155" />
+                    <path d="M90 68 Q80 68 85 75 M90 68 L85 64" class="stroke-amber-400" stroke-width="2"/>
+                    <path d="M95 60 L85 68" />
+                </svg>`
+            },
+            {
+                id: 'air-bench',
+                title: 'Air Bench',
+                pageRef: 'Page 210 (Figure 4-8)',
+                type: 'time',
+                defaultTime: 120,
+                timeDisplay: '2 - 3 minutes',
+                purpose: 'Puts all the postural alignment pieces back together.',
+                instructions: 'Stand with back against wall, feet hip-width apart pointing forward. Slide down until knees are bent at a 90-degree angle (like sitting in a chair). Ensure your entire lower back is pressed completely flat against the wall.',
+                svg: `<svg viewBox="0 0 200 180" class="w-full h-full text-teal-400 stroke-current fill-none stroke-[2.5] stroke-linecap-round stroke-linejoin-round">
+                    <path d="M80 30 L80 160" class="stroke-slate-500" stroke-width="4"/>
+                    <circle cx="92" cy="45" r="10" />
+                    <path d="M92 55 L92 98 L135 98 L135 150 L145 150" />
+                    <path d="M84 55 L84 98" class="stroke-amber-400" stroke-width="3" stroke-dasharray="3 2"/>
+                    <path d="M60 150 L160 150" class="stroke-slate-600" stroke-width="1.5" />
+                </svg>`
+            }
+        ];
+
+        let state = {
+            currentTab: 'routine',
+            selectedExerciseId: null,
+            guidedIndex: 0,
+            guidedState: {
+                timerActive: false,
+                timeLeft: 0,
+                timerInterval: null,
+                completedSets: {},
+            },
+            history: JSON.parse(localStorage.getItem('egoscue_workout_history') || '[]')
+        };
+
+        let deferredPrompt = null;
+
+        function playBeep(freq = 600, duration = 0.2, type = 'sine') {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log('Audio Context Error', e);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+            lucide.createIcons();
+            registerPWA();
+            renderApp();
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+        });
+
+        function applySavedTheme() {
+            const saved = localStorage.getItem('painfree-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', saved);
+            updateThemeIcon();
+        }
+
+        function toggleTheme() {
+            const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('painfree-theme', next);
+            updateThemeIcon();
+            lucide.createIcons();
+        }
+
+        function updateThemeIcon() {
+            const btn = document.getElementById('theme-toggle');
+            const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+            btn.innerHTML = `<i data-lucide="${isLight ? 'sun' : 'moon'}" class="w-4 h-4"></i>`;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('opacity-0', '-translate-y-2', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+            }, 2500);
+        }
+
+        function switchTab(tab, exerciseId = null) {
+            if (state.currentTab === 'guided' && tab !== 'guided' && state.guidedState.timerActive) {
+                pauseTimer();
+            }
+            state.currentTab = tab;
+            if (exerciseId) state.selectedExerciseId = exerciseId;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-teal-400');
+                btn.classList.add('text-slate-400');
+            });
+            const activeNav = document.getElementById(`nav-${tab}`);
+            if (activeNav) {
+                activeNav.classList.remove('text-slate-400');
+                activeNav.classList.add('text-teal-400');
+            }
+            const workoutDot = document.getElementById('active-workout-dot');
+            if (workoutDot) {
+                workoutDot.classList.toggle('hidden', !(state.guidedState.timerActive || Object.keys(state.guidedState.completedSets).length));
+            }
+            renderApp();
+        }
+
+        function renderApp() {
+            const container = document.getElementById('app-container');
+            if (state.currentTab === 'routine') {
+                container.innerHTML = renderRoutineView();
+            } else if (state.currentTab === 'guided') {
+                container.innerHTML = renderGuidedView();
+            } else if (state.currentTab === 'history') {
+                container.innerHTML = renderHistoryView();
+            } else if (state.currentTab === 'detail') {
+                container.innerHTML = renderDetailView();
+            }
+            lucide.createIcons();
+        }
+
+        function renderRoutineView() {
+            return `
+                <div class="space-y-4">
+                    <div class="bg-gradient-to-br from-teal-900/60 to-slate-800 border border-teal-500/30 rounded-2xl p-4 shadow-md">
+                        <div class="flex items-center space-x-2 text-teal-400 font-bold text-sm mb-2">
+                            <i data-lucide="clock" class="w-4 h-4"></i>
+                            <span>TMJ & Neck Menu Prescriptions</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50">
+                                <span class="text-slate-400 block mb-0.5">Total time</span>
+                                <strong class="text-white text-sm">~15 minutes</strong>
+                            </div>
+                            <div class="bg-slate-900/60 p-2.5 rounded-xl border border-slate-700/50">
+                                <span class="text-slate-400 block mb-0.5">Times a day</span>
+                                <strong class="text-white text-sm">1x Morning</strong>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-300 mt-2.5 leading-relaxed bg-teal-950/40 p-2 rounded-lg border border-teal-800/40">
+                            <strong>Duration:</strong> Do exercises daily until pain abates for 48 hours, then move to overall conditioning.
+                        </p>
+                    </div>
+                    <button type="button" onclick="startGuidedRoutine()" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-teal-600/30 flex items-center justify-center space-x-2 transition active:scale-98">
+                        <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                        <span>Start Interactive Guided Session</span>
+                    </button>
+                    <div class="space-y-3">
+                        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400 px-1">Menu Sequence (${EXERCISES.length} E-Cises)</h2>
+                        ${EXERCISES.map((ex, idx) => `
+                            <div onclick="switchTab('detail', '${ex.id}')" class="bg-slate-800 hover:bg-slate-750 border border-slate-700/70 hover:border-teal-500/50 rounded-2xl p-3.5 flex items-center space-x-3 transition cursor-pointer group shadow-sm">
+                                <div class="w-16 h-16 rounded-xl bg-slate-900 border border-slate-700 flex-shrink-0 p-1 flex items-center justify-center group-hover:border-teal-500/50 transition">
+                                    ${ex.svg}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-[10px] font-bold text-teal-400 uppercase tracking-wider">#${idx + 1} E-CISE</span>
+                                        <span class="text-[11px] font-medium text-slate-400 bg-slate-900/80 px-2 py-0.5 rounded-full border border-slate-700">
+                                            ${ex.type === 'time' ? ex.timeDisplay : ex.altReps}
+                                        </span>
+                                    </div>
+                                    <h3 class="text-sm font-bold text-white group-hover:text-teal-300 transition truncate mt-0.5">${ex.title}</h3>
+                                    <p class="text-xs text-slate-400 line-clamp-1 mt-0.5">${ex.purpose}</p>
+                                </div>
+                                <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500 group-hover:text-teal-400 transition flex-shrink-0"></i>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGuidedView() {
+            const ex = EXERCISES[state.guidedIndex];
+            const isLast = state.guidedIndex === EXERCISES.length - 1;
+            const completedSets = state.guidedState.completedSets[ex.id] || 0;
+            return `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                        <span>Exercise ${state.guidedIndex + 1} of ${EXERCISES.length}</span>
+                        <span class="font-medium text-teal-400">${Math.round(((state.guidedIndex + 1) / EXERCISES.length) * 100)}% Complete</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700/50">
+                        <div class="bg-teal-500 h-full transition-all duration-300" style="width: ${((state.guidedIndex + 1) / EXERCISES.length) * 100}%"></div>
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <span class="text-xs font-bold text-teal-400 uppercase tracking-wider">${ex.pageRef}</span>
+                                <h2 class="text-xl font-extrabold text-white mt-0.5">${ex.title}</h2>
+                            </div>
+                        </div>
+                        <div class="w-full h-44 bg-slate-900 border border-slate-700/80 rounded-xl p-3 my-3 flex items-center justify-center">
+                            ${ex.svg}
+                        </div>
+                        <div class="space-y-2 mb-5">
+                            <p class="text-xs text-slate-300 leading-relaxed">${ex.instructions}</p>
+                            <div class="text-[11px] text-teal-300 bg-teal-950/40 p-2 rounded-lg border border-teal-800/40">
+                                <strong>Purpose:</strong> ${ex.purpose}
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl p-4">
+                            ${ex.type === 'time' ? renderTimerControls(ex) : renderRepsControls(ex, completedSets)}
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between space-x-3 pt-2">
+                        <button type="button" onclick="prevGuidedStep()" ${state.guidedIndex === 0 ? 'disabled class="opacity-40 cursor-not-allowed bg-slate-800 text-slate-400 px-4 py-3 rounded-xl flex-1 flex items-center justify-center font-medium text-sm"' : 'class="bg-slate-800 hover:bg-slate-700 text-white px-4 py-3 rounded-xl flex-1 flex items-center justify-center font-medium text-sm border border-slate-700 transition"'}>
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-1.5"></i>
+                            <span>Previous</span>
+                        </button>
+                        ${isLast ? `
+                            <button type="button" onclick="finishWorkout()" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-3 rounded-xl flex-1 flex items-center justify-center font-bold text-sm shadow-lg shadow-teal-600/30 transition">
+                                <i data-lucide="check-circle" class="w-4 h-4 mr-1.5"></i>
+                                <span>Complete Workout</span>
+                            </button>
+                        ` : `
+                            <button type="button" onclick="nextGuidedStep()" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-3 rounded-xl flex-1 flex items-center justify-center font-bold text-sm shadow-lg shadow-teal-600/30 transition">
+                                <span>Next E-Cise</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 ml-1.5"></i>
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderTimerControls(ex) {
+            const minutes = Math.floor(state.guidedState.timeLeft / 60);
+            const seconds = state.guidedState.timeLeft % 60;
+            const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            return `
+                <div class="flex flex-col items-center">
+                    <span class="text-xs text-slate-400 font-medium mb-1">Prescribed Hold: ${ex.timeDisplay}</span>
+                    <div class="text-4xl font-mono font-extrabold text-teal-400 tracking-wider my-1">
+                        ${formattedTime}
+                    </div>
+                    <div class="flex items-center space-x-3 mt-3">
+                        ${state.guidedState.timerActive ? `
+                            <button type="button" onclick="pauseTimer()" class="bg-amber-600 hover:bg-amber-500 text-white px-5 py-2 rounded-lg font-bold text-xs flex items-center space-x-1.5 shadow transition">
+                                <i data-lucide="pause" class="w-4 h-4"></i>
+                                <span>Pause</span>
+                            </button>
+                        ` : `
+                            <button type="button" onclick="startTimer(${ex.defaultTime})" class="bg-teal-600 hover:bg-teal-500 text-white px-5 py-2 rounded-lg font-bold text-xs flex items-center space-x-1.5 shadow transition">
+                                <i data-lucide="play" class="w-4 h-4"></i>
+                                <span>${state.guidedState.timeLeft > 0 ? 'Resume' : 'Start Timer'}</span>
+                            </button>
+                        `}
+                        <button type="button" onclick="resetTimer(${ex.defaultTime})" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg font-medium text-xs border border-slate-700 transition">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderRepsControls(ex, completedSets) {
+            return `
+                <div class="flex flex-col items-center">
+                    <div class="text-xs text-slate-400 font-medium mb-2">
+                        Prescribed: <span class="text-white font-bold">${ex.altReps}</span>
+                    </div>
+                    <div class="flex items-center justify-center space-x-2 my-2">
+                        ${Array.from({ length: ex.defaultSets }).map((_, idx) => {
+                            const isDone = idx < completedSets;
+                            return `
+                                <button type="button" onclick="toggleSet('${ex.id}', ${idx + 1})" class="w-11 h-11 rounded-xl flex flex-col items-center justify-center border font-bold text-xs transition ${isDone ? 'bg-teal-600 border-teal-400 text-white shadow-md shadow-teal-600/30' : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500'}">
+                                    <span>Set ${idx + 1}</span>
+                                    <i data-lucide="${isDone ? 'check' : 'square'}" class="w-3.5 h-3.5 mt-0.5"></i>
+                                </button>
+                            `;
+                        }).join('')}
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-2">Tap a set block once completed</p>
+                </div>
+            `;
+        }
+
+        function startTimer(defaultDuration) {
+            if (state.guidedState.timeLeft <= 0) {
+                state.guidedState.timeLeft = defaultDuration;
+            }
+            state.guidedState.timerActive = true;
+            playBeep(800, 0.1);
+            clearInterval(state.guidedState.timerInterval);
+            state.guidedState.timerInterval = setInterval(() => {
+                if (state.guidedState.timeLeft > 0) {
+                    state.guidedState.timeLeft--;
+                    renderApp();
+                } else {
+                    pauseTimer();
+                    playBeep(1000, 0.5, 'triangle');
+                    showToast('Hold Time Completed!');
+                    renderApp();
+                }
+            }, 1000);
+            renderApp();
+        }
+
+        function pauseTimer() {
+            state.guidedState.timerActive = false;
+            clearInterval(state.guidedState.timerInterval);
+            renderApp();
+        }
+
+        function resetTimer(defaultDuration) {
+            pauseTimer();
+            state.guidedState.timeLeft = defaultDuration;
+            renderApp();
+        }
+
+        function toggleSet(exerciseId, setNum) {
+            const current = state.guidedState.completedSets[exerciseId] || 0;
+            if (current >= setNum) {
+                state.guidedState.completedSets[exerciseId] = setNum - 1;
+            } else {
+                state.guidedState.completedSets[exerciseId] = setNum;
+                playBeep(700, 0.15);
+            }
+            renderApp();
+        }
+
+        function startGuidedRoutine() {
+            state.guidedIndex = 0;
+            state.guidedState.timeLeft = EXERCISES[0].type === 'time' ? EXERCISES[0].defaultTime : 0;
+            switchTab('guided');
+        }
+
+        function prevGuidedStep() {
+            if (state.guidedIndex > 0) {
+                pauseTimer();
+                state.guidedIndex--;
+                const ex = EXERCISES[state.guidedIndex];
+                state.guidedState.timeLeft = ex.type === 'time' ? ex.defaultTime : 0;
+                renderApp();
+            }
+        }
+
+        function nextGuidedStep() {
+            if (state.guidedIndex < EXERCISES.length - 1) {
+                pauseTimer();
+                state.guidedIndex++;
+                const ex = EXERCISES[state.guidedIndex];
+                state.guidedState.timeLeft = ex.type === 'time' ? ex.defaultTime : 0;
+                renderApp();
+            }
+        }
+
+        function finishWorkout() {
+            pauseTimer();
+            const record = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                exercisesCount: EXERCISES.length,
+            };
+            state.history.unshift(record);
+            localStorage.setItem('egoscue_workout_history', JSON.stringify(state.history));
+            showToast('Workout Logged Successfully!');
+            switchTab('history');
+        }
+
+        function renderDetailView() {
+            const ex = EXERCISES.find(e => e.id === state.selectedExerciseId) || EXERCISES[0];
+            return `
+                <div class="space-y-4">
+                    <button type="button" onclick="switchTab('routine')" class="inline-flex items-center text-xs font-medium text-teal-400 hover:underline">
+                        <i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Back to Menu List
+                    </button>
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-lg">
+                        <span class="text-xs font-bold text-teal-400 uppercase tracking-wider">${ex.pageRef}</span>
+                        <h2 class="text-xl font-extrabold text-white mt-1">${ex.title}</h2>
+                        <div class="w-full h-52 bg-slate-900 border border-slate-700 rounded-xl p-4 my-4 flex items-center justify-center">
+                            ${ex.svg}
+                        </div>
+                        <div class="space-y-3 text-xs">
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+                                <span class="text-slate-400 block font-medium mb-1">Prescribed Dosage</span>
+                                <span class="text-white font-bold text-sm">${ex.type === 'time' ? ex.timeDisplay : ex.altReps}</span>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+                                <span class="text-slate-400 block font-medium mb-1">Purpose / Alignment Benefit</span>
+                                <p class="text-slate-200 leading-relaxed">${ex.purpose}</p>
+                            </div>
+                            <div class="bg-slate-900 p-3 rounded-xl border border-slate-700/60">
+                                <span class="text-slate-400 block font-medium mb-1">Detailed Instructions</span>
+                                <p class="text-slate-300 leading-relaxed">${ex.instructions}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="jumpToGuided('${ex.id}')" class="w-full mt-5 bg-teal-600 hover:bg-teal-500 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center space-x-2">
+                            <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                            <span>Perform in Guided Mode</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function jumpToGuided(exId) {
+            const idx = EXERCISES.findIndex(e => e.id === exId);
+            if (idx !== -1) {
+                state.guidedIndex = idx;
+                const ex = EXERCISES[idx];
+                state.guidedState.timeLeft = ex.type === 'time' ? ex.defaultTime : 0;
+                switchTab('guided');
+            }
+        }
+
+        function renderHistoryView() {
+            return `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-base font-bold text-white">Workout History</h2>
+                        <span class="text-xs text-slate-400">${state.history.length} Sessions Logged</span>
+                    </div>
+                    ${state.history.length === 0 ? `
+                        <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-8 text-center space-y-3">
+                            <div class="w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                                <i data-lucide="calendar" class="w-6 h-6"></i>
+                            </div>
+                            <p class="text-xs text-slate-400">No completed sessions recorded yet.</p>
+                            <button type="button" onclick="startGuidedRoutine()" class="bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition">
+                                Complete First Routine
+                            </button>
+                        </div>
+                    ` : `
+                        <div class="space-y-2.5">
+                            ${state.history.map(item => `
+                                <div class="bg-slate-800 border border-slate-700/70 rounded-xl p-3.5 flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-10 h-10 rounded-lg bg-teal-950 border border-teal-800 flex items-center justify-center text-teal-400">
+                                            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-xs font-bold text-white">TMJ & Neck Menu Completed</h4>
+                                            <span class="text-[11px] text-slate-400">${item.date}</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs font-semibold text-teal-400 bg-teal-950/60 px-2.5 py-1 rounded-full border border-teal-800/40">
+                                        ${item.exercisesCount} E-Cises
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button type="button" onclick="clearHistory()" class="w-full text-center text-xs text-rose-400 hover:text-rose-300 py-2 transition">
+                            Clear History Log
+                        </button>
+                    `}
+                </div>
+            `;
+        }
+
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear your workout history?')) {
+                state.history = [];
+                localStorage.removeItem('egoscue_workout_history');
+                renderApp();
+                showToast('History cleared');
+            }
+        }
+
+        function registerPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch((err) => console.log('SW Reg Error:', err));
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                const pwaBtn = document.getElementById('pwa-install-btn');
+                if (pwaBtn) {
+                    pwaBtn.classList.remove('hidden');
+                    pwaBtn.classList.add('flex');
+                }
+            });
+
+            const pwaBtn = document.getElementById('pwa-install-btn');
+            if (pwaBtn) {
+                pwaBtn.addEventListener('click', async () => {
+                    if (!deferredPrompt) return;
+                    deferredPrompt.prompt();
+                    await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    pwaBtn.classList.add('hidden');
+                    pwaBtn.classList.remove('flex');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
